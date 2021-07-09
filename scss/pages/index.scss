@@ -1,0 +1,59 @@
+h1 {
+  color: $primary-color;
+  position: absolute;
+  top: 44px;
+  right: 5%;
+  margin-top: 0;
+}
+
+#article_index{
+  @include margin;
+  position: absolute;
+  margin-top: 150px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  
+}
+
+.card{
+  display: flex;
+  width: 25vw;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  margin-top: 40px;
+  &_name{
+    color: $secondaty-color;
+    margin-bottom: 0;
+  }
+  &_picture{
+    width: 80%;
+  }
+  &_location{
+    color: $primary-color;
+    font-size: 13px;
+line-height: 17px;
+  }
+  &_slogan{
+    font-family: DM Sans;
+font-style: normal;
+font-weight: normal;
+font-size: 10px;
+line-height: 13px;
+  }
+  &_price{
+    font-size: 9px;
+line-height: 12px;
+color: $grey;
+
+  }
+  &_ul{
+    display: flex;
+    padding: 0;
+    margin: 15px auto;
+    &_li{
+      @include hashtag;
+    }
+  }
+}

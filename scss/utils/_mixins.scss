@@ -1,0 +1,17 @@
+@mixin margin {
+  margin: 0 5vw;
+}
+
+@mixin hashtag {
+  color: $primary-color;
+  border: 0.5px solid #C4C4C4;
+  padding: 3px;
+  box-sizing: border-box;
+  border-radius: 11px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  margin: 0 3px;
+}

@@ -1,0 +1,48 @@
+header>*{
+  position: absolute;
+}
+
+.header{
+  @include margin;
+  &_logo {
+    width: 200px;
+    height: 50px;
+    top: 42px;
+  }
+
+  &_nav{
+    display: flex;
+    justify-content: center;
+    left: 0;
+    right: 0;
+    &>ul{
+      display: flex;
+      flex-wrap: wrap;
+      position: absolute;
+      top: 40px;
+      width: 40vw;
+      left:27%;
+      display: flex;
+      padding: 0;
+      justify-content: space-around ;
+      list-style: none;
+      &>li{
+        @include hashtag;
+      }
+    }
+  }
+}
+
+header>span{
+  left: 0%;
+  right: 0%;
+  width: 170px;
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
+  margin: auto;
+  padding: 5px 0;
+  vertical-align: middle;
+  background-color: $secondaty-color;
+  border-radius: 5px;
+}
