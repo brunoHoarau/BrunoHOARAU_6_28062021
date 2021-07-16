@@ -36,7 +36,7 @@ class Photographer {
     this.country = country; 
     this.portrait = portrait; 
     this.tagline = tagline; 
-    this.tags = tags; 
+    this.tags = tags;
   }
 
     addInArray(){
