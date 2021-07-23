@@ -1,9 +1,26 @@
 // Recupération DOM
-const sectionIndex = document.getElementById('article_index');
+const main = document.getElementById('article_index');
 let headerNav = document.getElementById('navUl');
-sectionIndex.innerHTML = '';
+let tagsNav= document.getElementsByClassName('card_ul');
+console.log(tagsNav)
+
+
+main.innerHTML = '';
 let allPhotographers = [];
 let tagsArray = [];
+
+class Photographer {
+  constructor(name,id,city,country,portrait,tagline,price,tags){
+    this.name = name;
+    this.id = id;
+    this.city = city; 
+    this.country = country; 
+    this.portrait = portrait; 
+    this.tagline = tagline; 
+    this.price = price;
+    this.tags = tags; 
+  }
+}
 
 function initData(){
   fetch('./FishEyeData.json')
@@ -24,7 +41,9 @@ function fetchDataPhotographer(){
       for( data of datas.photographers){
         allPhotographers.push(data);
         let photographer = new Photographer(data.name,data.id,data.city,data.country,data.portrait,data.tagline,data.price,data.tags);
-        showCardsPhotographers(photographer);
+        createCards(photographer);
+        photographer.tags.forEach(value => { getTagsElement(value);})
+
       }
   showTagsNav();
     })
@@ -32,52 +51,87 @@ function fetchDataPhotographer(){
 }
 fetchDataPhotographer();
 
-function showCardsPhotographers(photographer){
-  let ulSection = "<ul class='card_ul'>";
-  photographer.tags.forEach(value => {
-    ulSection += "<li class='card_ul_li'>#"+value+"</li>";
-    getTagsElement(value);
-  })
-
-  sectionIndex.innerHTML += ' <section class="card"><a href="/photographer-page.html?id='+photographer.id +'">' +
-                                '<img class="card_picture" src="./public/'+photographer.portrait+'">' +
-                                '<h2 class="card_name">'+photographer.name+'</h2>'
-                                 + '<p class="card_location">'+photographer.city+', '+photographer.country+'</p>' + '<p class="card_slogan">'+photographer.tagline+'</p>' + '<p class="card_price">'+photographer.price+' €/jour</p>' + ulSection +'</ul></a></section>';
-}
-
 function showTagsNav() {
-  tagsArray.forEach( tags => { headerNav.innerHTML += tags })
+  tagsArray.forEach( tags => { 
+    headerNav.innerHTML += tags;
+   });
+  
 }
 
 
 headerNav.addEventListener('click', (ul) => {
   const liValue = ul.target.getAttribute('value');
-  sectionIndex.innerHTML = "";
+ main.innerHTML = "";
   for( photographer of allPhotographers){
     allPhotographers = [];
     if( photographer.tags.includes(liValue)){
-      showCardsPhotographers(photographer);
+      createCards(photographer);
     }
   }
   initData();
 })
 
+
+
 function getTagsElement(value){
   let brutValue = value;
   value = value.charAt(0).toUpperCase() + value.slice(1);
-        value = "<li class='nav_ul_li' value="+brutValue+" >#"+value+"</li>";
+  value = "<li class='nav_ul_li' value="+brutValue+" >#"+value+"</li>";
         tagsArray.includes(value) ? '' : tagsArray.push(value);
 }
 
-class Photographer {
-  constructor(name,id,city,country,portrait,tagline,price,tags){
-    this.name = name;
-    this.id = id;
-    this.city = city; 
-    this.country = country; 
-    this.portrait = portrait; 
-    this.tagline = tagline; 
-    this.price = price;
-    this.tags = tags; 
-  }
+
+
+function createCards(photographer){
+  const sectionCard = elmtFactory(
+    "section",
+    {class:'card'},
+  )
+
+  const head = elmtFactory(
+    'a',
+    { href:'photographer-page.html?id='+photographer.id},
+    elmtFactory('img',{class:'card_picture', src:'./public/'+photographer.portrait},),
+    elmtFactory('h2',{class:'card_name'},photographer.name),
+    elmtFactory('p',{class:'card_location'}, photographer.city+', '+photographer.country),
+    elmtFactory('p',{class:'card_slogan'},photographer.tagline),
+    elmtFactory('p',{class:'card_price'},photographer.price+'€'),
+   )
+   
+   let ul = elmtFactory(
+     'ul',
+     {class:'card_ul'},
+    )
+
+    let li = photographer.tags.map( (value) => {
+      return ("<li class='card_ul_li'>#"
+      +value+
+    "</li>")});
+
+    li = li.toString().replace(/[, ]+/g, " ").trim();
+
+    main.appendChild(sectionCard);
+    sectionCard.appendChild(head);
+    sectionCard.appendChild(ul);
+    ul.innerHTML += (li);
+  
 }
+
+const elmtFactory = (nodeName, attribute, ...children) => {
+  const elmt = document.createElement(nodeName)
+
+  for(key in attribute){
+    elmt.setAttribute(key, attribute[key])
+  }
+
+  children.forEach(child => {
+    if (typeof child === 'string'){
+      elmt.appendChild(document.createTextNode(child))
+    } else {
+      elmt.appendChild(child)
+    }
+  })
+  return elmt;
+}
+
+Array.from(tagsNav).forEach( item => item.addEventListener('click', console.log('click')))

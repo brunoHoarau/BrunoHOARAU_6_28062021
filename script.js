@@ -63,7 +63,7 @@ fetch('./FishEyeData.json')
       getTagsElement(value);
     })
   
-    sectionIndex.innerHTML += ' <section class="card"><a href="/photographer-page.html?id='+photographer.id +'">' +
+    sectionIndex.innerHTML += ' <section class="card"><a href="photographer-page.html?id='+photographer.id +'">' +
                                   '<img class="card_picture" src="./public/'+photographer.portrait+'">' +
                                   '<h2 class="card_name">'+photographer.name+'</h2>'
                                    + '<p class="card_location">'+photographer.city+', '+photographer.country+'</p>' + '<p class="card_slogan">'+photographer.tagline+'</p>' + '<p class="card_price">'+photographer.price+' €/jour</p>' + ulSection +'</ul></a></section>';
