@@ -412,11 +412,43 @@ header > span {
   border-radius: 5px;
 }
 
+.lightbox {
+  display: flex;
+  position: fixed;
+  width: 1200px;
+  height: 90%;
+  margin: auto;
+  top: 0;
+  left: 0;
+  align-items: center;
+  z-index: 10;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  max-width: 90vw;
+  max-height: 90vh;
+  margin: auto;
+}
+
+#modal {
+  display: block;
+  width: 50vw;
+  height: 15vh;
+  background-color: lawngreen;
+}
+
 h1 {
   color: #901C1C;
+}
+
+.main_index_h1 {
   position: absolute;
-  top: 44px;
   right: 5%;
+  top: 44px;
   margin-top: 0;
 }
 
@@ -480,9 +512,41 @@ h1 {
   margin: 0 3px;
 }
 
-.pictures_img {
-  width: 5%;
-  height: 5%;
+.profile {
+  max-width: 100vw;
+}
+.profile_picture {
+  max-height: 10vh;
+}
+
+.h1_page {
+  position: relative;
+}
+
+#gallery {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90vw;
+}
+
+.gallery {
+  width: 90vw;
+}
+
+.gallery_img {
+  width: 25vw;
+  height: 25vw;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+
+#section_contact {
+  display: none;
+}
+
+#commandSlider {
+  display: none;
+  justify-content: center;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -1,0 +1,30 @@
+.lightbox{
+  display: flex;
+  position: fixed;
+  width: 1200px;
+  height: 90%;
+    margin: auto;
+    top:0;
+    left: 0;
+    align-items: center;
+    z-index: 10;
+}
+
+.hidden{
+  display: none;
+}
+
+.visible{
+  max-width: 90vw;
+  max-height: 90vh;
+  margin: auto;
+}
+
+
+#modal{
+  display: block;
+  width: 50vw;
+  height: 15vh;
+  background-color: lawngreen;
+}
+

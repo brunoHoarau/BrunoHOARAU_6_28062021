@@ -1,7 +1,7 @@
 // Recupération DOM
 const main = document.getElementById('article_index');
 let headerNav = document.getElementById('navUl');
-let tagsNav= document.getElementsByClassName('card_ul');
+let tagsNav = document.querySelectorAll('li');
 console.log(tagsNav)
 
 
@@ -104,7 +104,7 @@ function createCards(photographer){
     )
 
     let li = photographer.tags.map( (value) => {
-      return ("<li class='card_ul_li'>#"
+      return ("<li class='card_ul_li' value='"+value+"' onclick='liClick(this)'>#"
       +value+
     "</li>")});
 
@@ -134,4 +134,15 @@ const elmtFactory = (nodeName, attribute, ...children) => {
   return elmt;
 }
 
-Array.from(tagsNav).forEach( item => item.addEventListener('click', console.log('click')))
+function liClick(value){
+  var getValue = value.getAttribute('value')
+  console.log(getValue);
+  main.innerHTML = "";
+  for( photographer of allPhotographers){
+    allPhotographers = [];
+    if( photographer.tags.includes(getValue)){
+      createCards(photographer);
+    }
+  }
+  initData();
+}

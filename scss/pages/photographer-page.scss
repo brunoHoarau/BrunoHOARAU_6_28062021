@@ -1,4 +1,30 @@
-.pictures_img{
-  width: 5%;
-  height: 5%;
+.profile{
+  max-width: 100vw;
+  &_picture{
+    max-height: 10vh;
+
+  }
+}
+.h1_page{
+  position: relative;
+}
+
+#gallery{
+  display: flex;
+  flex-wrap: wrap;
+  width: 90vw;
+}
+.gallery{
+  width: 90vw;
+}
+
+.gallery_img{
+  width: 25vw;
+  height: 25vw;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+
+#section_contact{
+  display: none; 
 }

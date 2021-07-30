@@ -1,9 +1,14 @@
 h1 {
   color: $primary-color;
-  position: absolute;
-  top: 44px;
-  right: 5%;
-  margin-top: 0;
+}
+
+.main_index{
+  &_h1{
+    position: absolute;
+    right: 5%;
+    top: 44px;
+    margin-top: 0;
+  }
 }
 
 #article_index{
