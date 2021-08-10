@@ -1,8 +1,7 @@
 .lightbox{
   display: flex;
-  position: fixed;
-  width: 1200px;
-  height: 90%;
+  position: absolute;
+  width: 100vw;
     margin: auto;
     top:0;
     left: 0;
@@ -20,6 +19,27 @@
   margin: auto;
 }
 
+#lightbox{
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  flex-wrap: wrap;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+}
+
+.lightbox_section{
+  display: flex; 
+  justify-content: center;
+  flex-direction: column;
+
+}
+
+.lightbox_img{
+  max-width: 80vw;
+  max-height: 90vh;
+}
 
 #modal{
   display: block;

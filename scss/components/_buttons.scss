@@ -1,4 +1,19 @@
 #commandSlider{
   display: none;
-  justify-content: center;
+  position: absolute;
+  width: 100vw;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+}
+
+#lightbox_prev, #lightbox_next{
+  display: flex;
+  background: rgb(184, 129, 129);
+  color: $primary-color;
+  width: 10vw;
+  height: 100vh;
+}
+
+button{
+  position: absolute;
 }

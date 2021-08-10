@@ -5,18 +5,39 @@
 
   }
 }
+
+.section_contact{
+  display: flex;
+  position: absolute;
+
+}
+
+.main_photographer{
+  @include margin;
+}
 .h1_page{
   position: relative;
 }
 
+
 #gallery{
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
-  width: 90vw;
 }
-.gallery{
-  width: 90vw;
+
+.section_card{
+  margin: 3vh 0;
+  &> .card_footer{
+    display: flex;
+    justify-content: space-between;
+    &> .groupHeart{
+      display: flex;
+    }
+  }
 }
+
+
 
 .gallery_img{
   width: 25vw;
@@ -24,6 +45,7 @@
   object-fit: cover;
   object-position: 50% 20%;
 }
+
 
 #section_contact{
   display: none; 
