@@ -3,7 +3,7 @@ const urlParams = new URLSearchParams(queryStringUrlId);
 let paramsId = urlParams.get('id');
 
 const photographerHead = document.getElementById('photographer_header');
-const main = document.getElementsByTagName('main');
+const mainPhotographer = document.getElementById('main_photographer');
 const articleSortBy = document.getElementById('article_sortBy');
 const gallery = document.getElementById('gallery');
 const modal = document.getElementById('modal');
@@ -190,9 +190,29 @@ function showPhotographerHeader(photographer){
   })
     }
     
-    
+    const lightbox_command = elmtFactory(
+      'article',
+      { id:'commandSlider'},
+      elmtFactory(
+        'button',
+        { id:'lightbox_close', class:'botton_close', onclick:'close_lightbox()'},
+        'X',
+        ),
+        elmtFactory(
+          'a',
+        { id:'lightbox_next' , class:'button_next', onclick:'nextPrev(1)'},
+        '>',
+        ),
+      elmtFactory(
+        'a',
+        { id:'lightbox_prev', class:'button_prev', onclick:'nextPrev(-1)'},
+        '<',
+        )
+        );
+        mainPhotographer.appendChild(lightbox_command);
+
 let number = 1;
-function imgCardFactory(element){
+        function imgCardFactory(element){
       let numbLike  = 0;
       element.innerHTML = "";
       allmedia.forEach( elmt => {
@@ -203,7 +223,7 @@ function imgCardFactory(element){
     if( elmt.image){
       let imgCard = elmtFactory(
         'img',
-        { class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.image, class:'gallery_img', onclick:'showLightbox('+number+')'},
+        { class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.image, class:'section_card_img' ,id:'gallery_img', onclick:'showLightbox('+number+')'},
         );
       let titleImg = elmtFactory(
         'p',
@@ -238,7 +258,7 @@ function imgCardFactory(element){
         let imgCard = elmtFactory(
           
         'video',
-        {class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.video, class:'gallery_img', type:"video/mp4", onclick:'showLightbox('+number+')'},
+        {class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.video, class:'section_card_img' ,id:'gallery_img', type:"video/mp4", onclick:'showLightbox('+number+')'},
         elmtFactory(
           'p',
           {class:'lImg_tilte'},
@@ -295,68 +315,57 @@ function imgCardFactory(element){
     
   }
   
-  const galleryModal = document.getElementById('gallery');
-  const galleryFactory = elmtFactory(
-    'article',
-    { id:'commandSlider'},
-    elmtFactory(
-      'button',
-      { id:'lightbox_close', class:'botton_close', onclick:'close_lightbox()'},
-      'X',
-      ),
-      elmtFactory(
-        'a',
-      { id:'lightbox_next' , class:'button_next', onclick:'nextPrev(1)'},
-      '>',
-      ),
-    elmtFactory(
-      'a',
-      { id:'lightbox_prev', class:'button_prev', onclick:'nextPrev(-1)'},
-      '<',
-      )
-  );
-  galleryModal.appendChild(galleryFactory);
   
+  
+  const galleryModal = document.getElementById('gallery');
   const galleryElmt = document.getElementsByClassName('section_card');
-  const galleryImg = document.getElementsByClassName('gallery_img');
+  const galleryImg = document.getElementsByClassName('section_card_img');
   const commandSlider = document.getElementById('commandSlider');
   const allHeart = document.getElementsByClassName('groupHeart');
-
+  
   function nextPrev(n){
-    showLightbox( number += n);
-  }
-
-  function showLightbox(number){
-    const lightboxSection = document.getElementsByClassName('lightbox_section');
-    console.log(number);
-    console.log(galleryElmt.length);
     if(number < 1){ number = galleryElmt.length };
     if(number > galleryElmt.length){ number = 1 };
-    console.log(number);
-  for( elmt of lightboxSection){
-    elmt.style.display = 'none';
+    console.log("entré nextPrev: " + number)
+    console.log("entré nextPrev: " + n)
+    showLightbox( number += n);
   }
-  for( elmt of galleryElmt){
-    elmt.style.display = 'none';
-    }
-  for( elmt of allHeart){
-    elmt.style.display ='none'
-  }
-  galleryElmt[number-1].style.display='flex';
-  galleryElmt[number-1].setAttribute('class', 'lightbox_section');
-  // galleryImg[number-1].setAttribute('class', 'lightbox_img');
-  commandSlider.style.display= 'flex';
-  gallery.setAttribute('id', 'lightbox')
-}
-
-function close_lightbox(){
-    gallery.setAttribute('id', 'gallery')
-    galleryModal.setAttribute('class','gallery');
+  
+  function showLightbox(number){
+    console.log('entree function: '+number );
+    if(number < 1){ number = galleryElmt.length };
+    if(number > galleryElmt.length){ number = 1 };
+    console.log('sotie condition function: '+number );
+    let lightboxImg = document.getElementById('lightbox_img');
+    let lightboxSection = document.getElementById('lightbox_section');
+    lightboxSection ? lightboxSection.removeAttribute('id') : '';
+    lightboxImg ? lightboxImg.setAttribute('id', 'gallery_img') : '';
     for( elmt of galleryElmt){
-      elmt.style.display = ''; 
-      elmt.style.position= '';
-      elmt.style.right= '';
+      elmt.style.display = 'none';
+    }
+    for( elmt of allHeart){
+      elmt.style.display ='none'
+    }
+    galleryElmt[number-1].style.display='flex';
+    galleryElmt[number-1].setAttribute('id', 'lightbox_section');
+    galleryImg[number-1].setAttribute('id', 'lightbox_img');
+    commandSlider.style.display= 'flex';
+    gallery.setAttribute('class', 'lightbox');
+    console.log('sotie function: '+number );
+  }
+  
+  
+function close_lightbox(){
+  let lightboxImg = document.getElementById('lightbox_img');
+  lightboxImg ? lightboxImg.setAttribute('id', 'gallery_img') : '';
+  let lightboxSection = document.getElementById('lightbox_section');
+  lightboxSection ? lightboxSection.removeAttribute('id') : '';
+  gallery.setAttribute('class', 'gallery');
+  // lightboxImg.removeAttribute('id');
+    for( elmt of galleryElmt){
+      elmt.style.display = '';
       commandSlider.style.display= 'none';
+
     }
     for( elmt of allHeart){
       elmt.style.display =''

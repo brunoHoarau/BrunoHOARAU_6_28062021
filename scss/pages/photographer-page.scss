@@ -1,18 +1,17 @@
 .profile{
   max-width: 100vw;
+  height: 30vh;
+  margin-top: 20vh;
   &_picture{
-    max-height: 10vh;
+    max-height: 22vh;
+    position: absolute;
+    top: 20%;
+    right: 8%;
 
   }
 }
 
-.section_contact{
-  display: flex;
-  position: absolute;
-
-}
-
-.main_photographer{
+#main_photographer{
   @include margin;
 }
 .h1_page{
@@ -22,12 +21,20 @@
 
 #gallery{
   display: flex;
+  
+}
+
+.gallery{
   justify-content: space-between;
   flex-wrap: wrap;
 }
 
 .section_card{
   margin: 3vh 0;
+  &_img{
+    object-fit: cover;
+    object-position: 50% 20%;
+  }
   &> .card_footer{
     display: flex;
     justify-content: space-between;
@@ -37,13 +44,9 @@
   }
 }
 
-
-
-.gallery_img{
+#gallery_img{
   width: 25vw;
-  height: 25vw;
-  object-fit: cover;
-  object-position: 50% 20%;
+  height: 22vw;
 }
 
 
