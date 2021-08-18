@@ -2,6 +2,14 @@ h1 {
   color: $primary-color;
 }
 
+#toContent{
+ display: none;
+ z-index: 10;
+}
+#toContent > a{ 
+  color:black;
+  
+}
 .main_index{
   &_h1{
     position: absolute;
@@ -12,11 +20,11 @@ h1 {
 }
 
 #article_index{
-  @include margin;
+  width: 100%;
   position: absolute;
   margin-top: 150px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-wrap: wrap;
   
 }
@@ -29,7 +37,7 @@ h1 {
   align-items: center;
   margin-top: 40px;
   &_name{
-    color: $secondaty-color;
+    color: $secondary-color;
     margin-bottom: 0;
   }
   &_picture{

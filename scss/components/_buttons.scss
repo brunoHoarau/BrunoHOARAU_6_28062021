@@ -1,29 +1,47 @@
 #card_contact{
-  left: 35%;
-  top: 21%;
-  background-color: $primary-color;
-  border: none;
-  border-radius: 5px;
-  padding: 20px 7px;
-  color: white;
+    position: relative; 
+    background-color: #901C1C;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    height: 56px;
 }
+// #card_contact{
+//   left: 35%;
+//   top: 21%;
+//   background-color: $primary-color;
+//   border: none;
+//   border-radius: 5px;
+//   color: white;
+//   width: 170px;
+//   height: 69px;
+// }
 
 #commandSlider{
   z-index: 10;
   display: none;
   top: 0;
   position: absolute;
-  width: 100vw;
+  width: 90vw;
+  height: 100vh;
   justify-content: space-between;
   flex-direction: row-reverse;
+  align-items: center;
+    &_close{
+      background-color: transparent;
+      border: none;
+      align-self: flex-start;
+      top:4%;
+    }
 }
 
 #lightbox_prev, #lightbox_next{
-  display: flex;
-  background: rgb(184, 129, 129);
   color: $primary-color;
-  width: 10vw;
-  height: 100vh;
+  height: 29.64px;
+  width: 48px;
 }
 
 button{

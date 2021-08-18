@@ -120,26 +120,23 @@ const elmtFactory = (nodeName, attribute, ...children) => {
 function showPhotographerHeader(photographer){
 
   const head = elmtFactory('section',{ class:'profile'},
-  
-  elmtFactory('h1',{ class:'h1_page'},photographer.name),
-  elmtFactory('img',{class:'profile_picture', src:'./public/'+photographer.portrait},),
+  elmtFactory('div',{class:'profile_div' },elmtFactory('h1',{ id:'h1_profile'},photographer.name), elmtFactory('button',{id:'card_contact', arialabel:'Contact me'},'Contactez-moi')),
+  elmtFactory('img',{class:'profile_picture', src:'./public/'+photographer.portrait, alt:''},),
   elmtFactory('p',{class:'card_location'}, photographer.city+', '+photographer.country),
   elmtFactory('p',{class:'card_slogan'},photographer.tagline),
   elmtFactory('p',{class:'card_price'},photographer.price+'€'),
-  elmtFactory('button',{id:'card_contact'},'Contactez-moi'),
   );
   const contact = elmtFactory('section',{id:"section_contact"},);
 
   const sortBySection = elmtFactory('section', {id:'sortBy'}, 
   )
-  const sortByLabel =   elmtFactory('label', {for:'sortSelect'},"trier par",
-    elmtFactory('select', {id:'sortSelect', name:'sortSelect', onchange:'sortBy(value)'})
+  const sortByLabel =   elmtFactory('label', {for:'sortSelect'},"Trier par",
+    elmtFactory('select', {id:'sortSelect', name:'Order by', labelledBy:'Order by', onchange:'sortBy(value)'})
   )
   
 
   sortBySection.appendChild(sortByLabel);
   articleSortBy.appendChild(sortBySection);
-
   const sortBySelect = document.getElementById('sortSelect');
   const arraySelect = ['Popularité', 'Date', 'Titre' ];
   arraySelect.forEach( elmt => { let option = elmtFactory('option', {value:elmt}, elmt);
@@ -151,68 +148,77 @@ function showPhotographerHeader(photographer){
 
 
   const form =
-    elmtFactory('form', {id:'section_form'},
-    elmtFactory('button',{id:'close_contact'}, 'X'),
-    elmtFactory('label', {for:'firstname'},'Prénom'),
-    elmtFactory('input', {id:'firstname', required:true},),
-    elmtFactory('label', {for:'name'},'Nom'),
-    elmtFactory('input', {id:'name', required:true},),
-    elmtFactory('label', {for:'email'},'email'),
-    elmtFactory('input', {id:'email', required:true},),
-    elmtFactory('label', {for:'message'},'Votre message'),
-    elmtFactory('textarea', {id:'message', required:true},),
-    elmtFactory('button',{ type:'submit', class:"submit_contact"},'Envoyer'),
-  )
+    elmtFactory('form', {id:'section_form', role:'dialog', ariaDescribedby:'contact'},
+      elmtFactory('button',{id:'close_contact'}, 'X'),
+      elmtFactory('h2', {id:'section_form_h2'}, "Contactez-moi " + photographer.name),
+      elmtFactory('fieldset', {id:'section_form_fieldset'},
+        elmtFactory('label', {for:'firstname'},'Prénom'),
+        elmtFactory('input', {id:'firstname', required:true, ariaRequired:true},),
+        elmtFactory('label', {for:'name'},'Nom'),
+        elmtFactory('input', {id:'name', required:true, ariaRequired:true},),
+        elmtFactory('label', {for:'email'},'email'),
+        elmtFactory('input', {id:'email', required:true, ariaRequired:true},),
+        elmtFactory('label', {for:'message'},'Votre message'),
+        elmtFactory('textarea', {id:'message', required:true, ariaRequired:true},)
+      ),
+      elmtFactory('button',{ type:'submit', class:"submit_contact"},'Envoyer'),
+    )
+
 
   let ulCard = elmtFactory(
      'ul',
      {class:'card_ul'},
     )
-    
-    let li = photographer.tags.map( (value) => {
-      return ("<li class='card_ul_li'>#"
-      +value+
-      "</li>")});
-      
-      li = li.toString().replace(/[, ]+/g, " ").trim();
-      photographerHead.appendChild(head);
-      photographerHead.appendChild(contact);
-      head.appendChild(ulCard);
-      const sectionContact = document.getElementById('section_contact');
-      sectionContact.appendChild(form);
-      ulCard.innerHTML += (li);
-      const contactButton = document.getElementById('card_contact');
-  contactButton.addEventListener('click', (e) => {
-    sectionContact.style.display='flex';
-    sectionContact.setAttribute('class', 'section_contact');
 
-    e.preventDefault()
-  })
+  let li = photographer.tags.map( (value) => {
+    return ("<li class='card_ul_li' ><a href='index.html?tag="+value+"' ><span>#</span>"
+    +value+
+    "</a></li>")});
+    
+    li = li.toString().replace(/[, ]+/g, " ").trim();
+    photographerHead.appendChild(head);
+    photographerHead.appendChild(contact);
+    head.appendChild(ulCard);
+    const sectionContact = document.getElementById('section_contact');
+    sectionContact.appendChild(form);
+    ulCard.innerHTML += (li);
+    // Contact Me event
+    const contactButton = document.getElementById('card_contact');
+     //to Open
+    contactButton.addEventListener('click', (e) => {
+      sectionContact.style.display='flex';
+      sectionContact.setAttribute('aria-hidden','false');
+      sectionContact.setAttribute('class', 'section_contact');
+      mainPhotographer.setAttribute('aria-hidden','true');
+      photographerHead.setAttribute('aria-hidden','true');
+      e.preventDefault();
+    })
+
+      //to close
+
     }
     
-    const lightbox_command = elmtFactory(
-      'article',
-      { id:'commandSlider'},
-      elmtFactory(
-        'button',
-        { id:'lightbox_close', class:'botton_close', onclick:'close_lightbox()'},
-        'X',
-        ),
-        elmtFactory(
-          'a',
-        { id:'lightbox_next' , class:'button_next', onclick:'nextPrev(1)'},
-        '>',
-        ),
-      elmtFactory(
-        'a',
-        { id:'lightbox_prev', class:'button_prev', onclick:'nextPrev(-1)'},
-        '<',
-        )
-        );
-        mainPhotographer.appendChild(lightbox_command);
+const lightbox_command = 
+elmtFactory('article',{ id:'commandSlider'},
+  elmtFactory('button',{ id:'commandSlider_close', class:'botton_close', onclick:'close_lightbox()'},
+    elmtFactory(
+      'img',
+      { src:'./public/close.svg', alt:'Close dialog'}),
+  ),
+  elmtFactory(
+    'a',{id:'lightbox_next' , class:'button_next', onclick:'nextPrev(1)'},
+      elmtFactory('img',{ src:'./public/next.svg', alt:'Next image'},)
+  ),
+  elmtFactory(
+    'a',{ id:'lightbox_prev' , class:'button_prev', onclick:'nextPrev(-1)'},
+      elmtFactory('img',{ src:'./public/previous.svg', alt:'Previous image'},)
+  )
+);
 
-let number = 1;
-        function imgCardFactory(element){
+mainPhotographer.appendChild(lightbox_command);
+
+function imgCardFactory(element){
+      let number = 1;
       let numbLike  = 0;
       element.innerHTML = "";
       allmedia.forEach( elmt => {
@@ -223,7 +229,7 @@ let number = 1;
     if( elmt.image){
       let imgCard = elmtFactory(
         'img',
-        { class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.image, class:'section_card_img' ,id:'gallery_img', onclick:'showLightbox('+number+')'},
+        { class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.image, class:'section_card_img' ,id:'gallery_img', alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')'},
         );
       let titleImg = elmtFactory(
         'p',
@@ -242,7 +248,7 @@ let number = 1;
         )
         let heart = elmtFactory(
           'img',
-          {src:'./public/coeur.svg',class:'lImg_svg' , value:elmt.likes, onclick:'increment('+numbLike+')'},
+          {src:'./public/coeur.svg',class:'lImg_svg', alt:'likes' , value:elmt.likes, onclick:'increment('+numbLike+')'},
         )
       
       
@@ -258,7 +264,7 @@ let number = 1;
         let imgCard = elmtFactory(
           
         'video',
-        {class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.video, class:'section_card_img' ,id:'gallery_img', type:"video/mp4", onclick:'showLightbox('+number+')'},
+        {class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.video, class:'section_card_img' ,id:'gallery_img', type:"video/mp4", alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')'},
         elmtFactory(
           'p',
           {class:'lImg_tilte'},
@@ -323,19 +329,20 @@ let number = 1;
   const commandSlider = document.getElementById('commandSlider');
   const allHeart = document.getElementsByClassName('groupHeart');
   
+  let currentNumberSlide = 0;
+
   function nextPrev(n){
-    if(number < 1){ number = galleryElmt.length };
-    if(number > galleryElmt.length){ number = 1 };
-    console.log("entré nextPrev: " + number)
-    console.log("entré nextPrev: " + n)
-    showLightbox( number += n);
+    showLightbox( currentNumberSlide += n);
   }
   
   function showLightbox(number){
-    console.log('entree function: '+number );
-    if(number < 1){ number = galleryElmt.length };
-    if(number > galleryElmt.length){ number = 1 };
-    console.log('sotie condition function: '+number );
+    currentNumberSlide = number;
+    if(currentNumberSlide < 1){ currentNumberSlide = galleryElmt.length };
+    if(currentNumberSlide > galleryElmt.length){ currentNumberSlide = 1 };
+    console.log('entree function: '+currentNumberSlide );
+    if(currentNumberSlide < 1){ currentNumberSlide = galleryElmt.length };
+    if(currentNumberSlide > galleryElmt.length){ currentNumberSlide = 1 };
+    console.log('sotie condition function: '+currentNumberSlide );
     let lightboxImg = document.getElementById('lightbox_img');
     let lightboxSection = document.getElementById('lightbox_section');
     lightboxSection ? lightboxSection.removeAttribute('id') : '';
@@ -346,14 +353,15 @@ let number = 1;
     for( elmt of allHeart){
       elmt.style.display ='none'
     }
-    galleryElmt[number-1].style.display='flex';
-    galleryElmt[number-1].setAttribute('id', 'lightbox_section');
-    galleryImg[number-1].setAttribute('id', 'lightbox_img');
+    galleryElmt[currentNumberSlide-1].style.display='flex';
+    galleryElmt[currentNumberSlide-1].setAttribute('id', 'lightbox_section');
+    galleryImg[currentNumberSlide-1].setAttribute('id', 'lightbox_img');
     commandSlider.style.display= 'flex';
     gallery.setAttribute('class', 'lightbox');
-    console.log('sotie function: '+number );
+    console.log('sotie function: '+currentNumberSlide );
+    
   }
-  
+    
   
 function close_lightbox(){
   let lightboxImg = document.getElementById('lightbox_img');
@@ -371,6 +379,17 @@ function close_lightbox(){
       elmt.style.display =''
     }
   }
+
+document.addEventListener('keydown', (e)=>{
+  e.preventDefault();
+  if(e.code === 'ArrowLeft'){
+    nextPrev(-1)
+  } else if(e.code === 'ArrowRight'){
+    nextPrev(1)
+  } else if(e.code === 'Escape' ){
+    close_lightbox()
+  }
+})
 
   
   
