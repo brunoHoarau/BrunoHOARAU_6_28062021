@@ -75,6 +75,8 @@ select#sortSelect>*{
 
 #section_contact{
   display: none;
+  justify-content: space-around;
+  align-items: center;
   position: fixed;
   z-index:10 ;
   width: 90vw;
@@ -91,7 +93,13 @@ select#sortSelect>*{
   border: none;
 }
 
+label{
+  font-size: 36px;
+  line-height: 47px;
+}
+
 #sortBy{
   font-weight: bold;
   margin: 2% 0;
 }
+

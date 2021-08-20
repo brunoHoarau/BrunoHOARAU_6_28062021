@@ -182,6 +182,7 @@ let vertical = -1;
   if(vertical > 100){
     toContent.style.display = 'block';
     toContent.style.position = 'fixed';
+    toContent.style.zIndex = 10;
   } else {
     toContent.style.display = 'none';
     toContent.style.zIndex = 0;

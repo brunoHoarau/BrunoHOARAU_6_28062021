@@ -470,7 +470,6 @@ h1 {
 
 #toContent {
   display: none;
-  z-index: 10;
 }
 
 #toContent > a {
@@ -619,6 +618,8 @@ select#sortSelect > * {
 
 #section_contact {
   display: none;
+  justify-content: space-around;
+  align-items: center;
   position: fixed;
   z-index: 10;
   width: 90vw;
@@ -633,6 +634,11 @@ select#sortSelect > * {
   justify-content: center;
   margin: auto;
   border: none;
+}
+
+label {
+  font-size: 36px;
+  line-height: 47px;
 }
 
 #sortBy {

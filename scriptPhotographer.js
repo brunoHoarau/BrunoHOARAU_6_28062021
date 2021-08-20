@@ -12,7 +12,8 @@ const value = "Popularité";
 
 
 let allmedia = [];
-let arrayImg =elmt = [];
+let arrayImg = [];
+let arrayLikes = [];
 let firstName; 
 
 function fetchOnePhotographerData(){
@@ -38,13 +39,9 @@ function fetchOnePhotographerMedia(){
     .then( function (datas) {
       getDatas(datas);
       setDatas(datas)
-      
-    }
-    
-    
-    )
+    })
     .catch(error => alert ("Erreur : " + error));
-  }
+}
 fetchOnePhotographerMedia();
 
 
@@ -64,6 +61,7 @@ class Photographer {
 function getDatas(datas){
   for( data of datas.media){
     if ( data.photographerId == paramsId){
+      arrayLikes.push(data.likes);
       allmedia.push(data);
       if(data.image){
         arrayImg.push(data.image);
@@ -74,9 +72,6 @@ function getDatas(datas){
     }
   }
 }
-
-console.log(allmedia)
-
 
 function setDatas(){
   sortBy(value);
@@ -89,14 +84,14 @@ const elmtFactory = (nodeName, attribute, ...children) => {
     for(key in attribute){
       elmt.setAttribute(key, attribute[key])
     }
-        
+    
     children.forEach(child => {
       if (typeof child === 'string'){
         elmt.appendChild(document.createTextNode(child))
       } else {
         elmt.appendChild(child)
       }
-  })
+    })
     return elmt;
   }
 
@@ -120,18 +115,20 @@ const elmtFactory = (nodeName, attribute, ...children) => {
 function showPhotographerHeader(photographer){
 
   const head = elmtFactory('section',{ class:'profile'},
-  elmtFactory('div',{class:'profile_div' },elmtFactory('h1',{ id:'h1_profile'},photographer.name), elmtFactory('button',{id:'card_contact', arialabel:'Contact me'},'Contactez-moi')),
-  elmtFactory('img',{class:'profile_picture', src:'./public/'+photographer.portrait, alt:''},),
-  elmtFactory('p',{class:'card_location'}, photographer.city+', '+photographer.country),
-  elmtFactory('p',{class:'card_slogan'},photographer.tagline),
-  elmtFactory('p',{class:'card_price'},photographer.price+'€'),
+  elmtFactory('div',{class:'profile_div' },
+  elmtFactory('h1',{ id:'h1_profile', tabIndex:0},photographer.name),
+  elmtFactory('button',{id:'card_contact', arialabel:'Contact me'},'Contactez-moi')),
+  elmtFactory('img',{class:'profile_picture', src:'./public/'+photographer.portrait, alt:'', tabIndex:0 },),
+  elmtFactory('p',{class:'card_location', tabIndex:0}, photographer.city+', '+photographer.country),
+  elmtFactory('p',{class:'card_slogan', tabIndex:0},photographer.tagline),
+  elmtFactory('p',{class:'card_price', tabIndex:0},photographer.price+'€'),
   );
   const contact = elmtFactory('section',{id:"section_contact"},);
-
+  
   const sortBySection = elmtFactory('section', {id:'sortBy'}, 
   )
   const sortByLabel =   elmtFactory('label', {for:'sortSelect'},"Trier par",
-    elmtFactory('select', {id:'sortSelect', name:'Order by', labelledBy:'Order by', onchange:'sortBy(value)'})
+  elmtFactory('select', {id:'sortSelect', name:'Order by', labelledBy:'Order by', onchange:'sortBy(value)'})
   )
   
 
@@ -148,9 +145,9 @@ function showPhotographerHeader(photographer){
 
 
   const form =
-    elmtFactory('form', {id:'section_form', role:'dialog', ariaDescribedby:'contact'},
+    elmtFactory('form', {id:'section_form', role:'dialog'},
       elmtFactory('button',{id:'close_contact'}, 'X'),
-      elmtFactory('h2', {id:'section_form_h2'}, "Contactez-moi " + photographer.name),
+      elmtFactory('h1', {id:'section_form_h2'}, "Contactez-moi " + photographer.name),
       elmtFactory('fieldset', {id:'section_form_fieldset'},
         elmtFactory('label', {for:'firstname'},'Prénom'),
         elmtFactory('input', {id:'firstname', required:true, ariaRequired:true},),
@@ -163,6 +160,7 @@ function showPhotographerHeader(photographer){
       ),
       elmtFactory('button',{ type:'submit', class:"submit_contact"},'Envoyer'),
     )
+ 
 
 
   let ulCard = elmtFactory(
@@ -191,8 +189,11 @@ function showPhotographerHeader(photographer){
       sectionContact.setAttribute('class', 'section_contact');
       mainPhotographer.setAttribute('aria-hidden','true');
       photographerHead.setAttribute('aria-hidden','true');
-      e.preventDefault();
+      // e.preventDefault();
     })
+    sectionContact.setAttribute('aria-hidden', 'true')
+    const sectionForm = document.getElementById('section_form');
+    sectionForm.setAttribute('aria-describedby', 'contact');
 
       //to close
 
@@ -215,7 +216,10 @@ elmtFactory('article',{ id:'commandSlider'},
   )
 );
 
+
+
 mainPhotographer.appendChild(lightbox_command);
+
 
 function imgCardFactory(element){
       let number = 1;
@@ -229,28 +233,28 @@ function imgCardFactory(element){
     if( elmt.image){
       let imgCard = elmtFactory(
         'img',
-        { class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.image, class:'section_card_img' ,id:'gallery_img', alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')'},
+        { class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.image, class:'section_card_img' ,id:'gallery_img', alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')', tabIndex:0},
         );
       let titleImg = elmtFactory(
         'p',
-        {class:'lImg_tilte'},
+        {class:'lImg_tilte',tabIndex:0},
         elmt.title
       )
       const cardFooter = elmtFactory('div',{ class:'card_footer'},)
       const likesGroup = elmtFactory(
         'div',
-        {class:'groupHeart'},
+        {class:'groupHeart',},
       );
       let likes = elmtFactory(
         'p',
-        {class:'lImg_likes'},
+        {class:'lImg_likes',tabIndex:0},
         elmt.likes.toString(),
         )
         let heart = elmtFactory(
           'img',
-          {src:'./public/coeur.svg',class:'lImg_svg', alt:'likes' , value:elmt.likes, onclick:'increment('+numbLike+')'},
+          {src:'./public/coeur.svg',class:'lImg_svg', alt:'likes' , value:elmt.likes, onclick:'increment('+numbLike+')',tabIndex:0},
         )
-      
+
       
       sectionCard.appendChild(imgCard);
       likesGroup.appendChild(likes);
@@ -264,17 +268,17 @@ function imgCardFactory(element){
         let imgCard = elmtFactory(
           
         'video',
-        {class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.video, class:'section_card_img' ,id:'gallery_img', type:"video/mp4", alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')'},
+        {class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.video, class:'section_card_img' ,id:'gallery_img', type:"video/mp4", alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')',tabIndex:0},
         elmtFactory(
           'p',
-          {class:'lImg_tilte'},
+          {class:'lImg_tilte',tabIndex:0},
           elmt.title
         ),
 
         );
         let titleImg = elmtFactory(
           'p',
-          {class:'lImg_tilte'},
+          {class:'lImg_tilte',tabIndex:0},
           elmt.title
         )
         const cardFooter = elmtFactory('div',{ class:'card_footer'},)
@@ -284,12 +288,12 @@ function imgCardFactory(element){
         );
         let likes = elmtFactory(
           'p',
-          {class:'lImg_likes'},
+          {class:'lImg_likes',tabIndex:0},
           elmt.likes.toString()
         ,)
         let heart = elmtFactory(
           'img',
-          {src:'./public/coeur.svg',class:'lImg_svg' , value:elmt.likes, onclick:'increment('+numbLike+')'},
+          {src:'./public/coeur.svg',class:'lImg_svg' , value:elmt.likes, onclick:'increment('+numbLike+')',tabIndex:0},
         )
         sectionCard.appendChild(imgCard);
       likesGroup.appendChild(likes);
@@ -310,6 +314,15 @@ function imgCardFactory(element){
     
   }
   
+
+
+
+//   const miniModal = elmtFactory('div',{class:'miniModal'},
+//     elmtFactory('div',{class:'miniModal_totalLikes'},totalLikes.toString()),
+//     elmtFactory('img',{src:'./public/coeur.svg',class:'lImg_svg', alt:'likes'},)
+//   )
+// mainPhotographer.appendChild(miniModal);
+
   const likesElmts = document.getElementsByClassName('lImg_likes');  
   const heartElmts = document.getElementsByClassName('lImg_svg');
 
@@ -381,7 +394,7 @@ function close_lightbox(){
   }
 
 document.addEventListener('keydown', (e)=>{
-  e.preventDefault();
+  // e.preventDefault();
   if(e.code === 'ArrowLeft'){
     nextPrev(-1)
   } else if(e.code === 'ArrowRight'){
@@ -390,6 +403,7 @@ document.addEventListener('keydown', (e)=>{
     close_lightbox()
   }
 })
+
 
   
   
