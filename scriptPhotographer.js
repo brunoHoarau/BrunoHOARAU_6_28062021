@@ -2,6 +2,7 @@ const queryStringUrlId = window.location.search;
 const urlParams = new URLSearchParams(queryStringUrlId);
 let paramsId = urlParams.get('id');
 
+const body = document.getElementsByTagName('BODY')[0];
 const photographerHead = document.getElementById('photographer_header');
 const mainPhotographer = document.getElementById('main_photographer');
 const articleSortBy = document.getElementById('article_sortBy');
@@ -14,7 +15,8 @@ const value = "Popularité";
 let allmedia = [];
 let arrayImg = [];
 let arrayLikes = [];
-let firstName; 
+let firstName;
+let price;
 
 function fetchOnePhotographerData(){
   fetch('./FishEyeData.json')
@@ -26,6 +28,7 @@ function fetchOnePhotographerData(){
           let name = photographer.name;
           firstName = name.split(' ');
           showPhotographerHeader(photographer);
+          price = photographer.price;
         }
       }
     })
@@ -74,6 +77,7 @@ function getDatas(datas){
 }
 
 function setDatas(){
+  showTotalLikes();
   sortBy(value);
 } 
 
@@ -112,13 +116,32 @@ const elmtFactory = (nodeName, attribute, ...children) => {
     }
   }
 
+  function showTotalLikes(){
+    let numberTotalLikes = 0;
+    let totalLikes;
+   
+    allmedia.forEach( elmt => {
+      if(elmt.image){
+      numberTotalLikes += elmt.likes;
+      console.log(numberTotalLikes);
+    }
+  })
+  console.log(allmedia)
+  totalLikes = elmtFactory('article',{class:'totalLikes'}, 
+    elmtFactory('section',{ class:'totalLikes_section'}, numberTotalLikes.toString(),
+      elmtFactory('img',{ src:'./public/coeurBlack.svg', alt:'likes'})),
+    elmtFactory('section',{ class:'totalLikes_section_price'}, price.toString()+"€ / jour"),
+    
+    );
+  photographerHead.appendChild(totalLikes);
+  }
 function showPhotographerHeader(photographer){
 
   const head = elmtFactory('section',{ class:'profile'},
   elmtFactory('div',{class:'profile_div' },
   elmtFactory('h1',{ id:'h1_profile', tabIndex:0},photographer.name),
   elmtFactory('button',{id:'card_contact', arialabel:'Contact me'},'Contactez-moi')),
-  elmtFactory('img',{class:'profile_picture', src:'./public/'+photographer.portrait, alt:'', tabIndex:0 },),
+  elmtFactory('img',{class:'profile_picture', src:'./public/Photographers ID Photos/'+photographer.portrait, alt:'', tabIndex:0 },),
   elmtFactory('p',{class:'card_location', tabIndex:0}, photographer.city+', '+photographer.country),
   elmtFactory('p',{class:'card_slogan', tabIndex:0},photographer.tagline),
   elmtFactory('p',{class:'card_price', tabIndex:0},photographer.price+'€'),
@@ -127,7 +150,7 @@ function showPhotographerHeader(photographer){
   
   const sortBySection = elmtFactory('section', {id:'sortBy'}, 
   )
-  const sortByLabel =   elmtFactory('label', {for:'sortSelect'},"Trier par",
+  const sortByLabel =   elmtFactory('label', {id:'sortBy_label', for:'sortSelect'},"Trier par",
   elmtFactory('select', {id:'sortSelect', name:'Order by', labelledBy:'Order by', onchange:'sortBy(value)'})
   )
   
@@ -140,14 +163,11 @@ function showPhotographerHeader(photographer){
     sortBySelect.appendChild(option);
   })
 
-  
-
-
-
   const form =
     elmtFactory('form', {id:'section_form', role:'dialog'},
-      elmtFactory('button',{id:'close_contact'}, 'X'),
-      elmtFactory('h1', {id:'section_form_h2'}, "Contactez-moi " + photographer.name),
+      elmtFactory('button',{id:'close_contact'},
+        elmtFactory('img',{ src:'./public/closeContact.png', id:'close_contact_img'})),
+      elmtFactory('h1', {id:'section_form_h1', tabindex:0}, "Contactez-moi \n"+ photographer.name),
       elmtFactory('fieldset', {id:'section_form_fieldset'},
         elmtFactory('label', {for:'firstname'},'Prénom'),
         elmtFactory('input', {id:'firstname', required:true, ariaRequired:true},),
@@ -156,9 +176,10 @@ function showPhotographerHeader(photographer){
         elmtFactory('label', {for:'email'},'email'),
         elmtFactory('input', {id:'email', required:true, ariaRequired:true},),
         elmtFactory('label', {for:'message'},'Votre message'),
-        elmtFactory('textarea', {id:'message', required:true, ariaRequired:true},)
+        elmtFactory('textarea', {id:'message', rows:8, required:true, ariaRequired:true},),
+        elmtFactory('button',{type:"submit",id:"submit_contact",class:"submit_contact"},'Envoyer'),
       ),
-      elmtFactory('button',{ type:'submit', class:"submit_contact"},'Envoyer'),
+      
     )
  
 
@@ -186,17 +207,45 @@ function showPhotographerHeader(photographer){
     contactButton.addEventListener('click', (e) => {
       sectionContact.style.display='flex';
       sectionContact.setAttribute('aria-hidden','false');
-      sectionContact.setAttribute('class', 'section_contact');
       mainPhotographer.setAttribute('aria-hidden','true');
       photographerHead.setAttribute('aria-hidden','true');
-      // e.preventDefault();
     })
+
     sectionContact.setAttribute('aria-hidden', 'true')
     const sectionForm = document.getElementById('section_form');
     sectionForm.setAttribute('aria-describedby', 'contact');
 
       //to close
+    const closeContact = document.getElementById('close_contact');
+    closeContact.addEventListener('click', (e)=> {
+      e.preventDefault();
+      closeContactFunction();
+    })
 
+    function closeContactFunction() {
+      sectionContact.style.display='none';
+      sectionContact.setAttribute('aria-hidden','true');
+      mainPhotographer.setAttribute('aria-hidden','false');
+      photographerHead.setAttribute('aria-hidden','false');
+      
+    }
+
+    // to send ** msg into console
+    const buttonSend = document.getElementById('submit_contact');
+    buttonSend.addEventListener('click', (e) => {
+      e.preventDefault();
+      const firstNameContact = document.getElementById('firstname').value;
+      console.log('firstname: '+firstNameContact);
+      const nameContact = document.getElementById('name').value;
+      console.log('name: '+nameContact);
+      const emailContact = document.getElementById('email').value;
+      console.log('email: '+ emailContact);
+      const msgContact = document.getElementById('message').value;
+      console.log('massage: '+ msgContact);
+
+      closeContactFunction();
+    })
+    
     }
     
 const lightbox_command = 
@@ -219,6 +268,8 @@ elmtFactory('article',{ id:'commandSlider'},
 
 
 mainPhotographer.appendChild(lightbox_command);
+
+
 
 
 function imgCardFactory(element){
@@ -313,6 +364,8 @@ function imgCardFactory(element){
     )
     
   }
+
+
   
 
 

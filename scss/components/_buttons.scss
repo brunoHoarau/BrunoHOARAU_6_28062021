@@ -20,6 +20,17 @@
 //   height: 69px;
 // }
 
+.submit_contact{
+  align-self: flex-start;
+  background-color: #901C1C;
+  padding: 10px 20px;
+  margin: 20px 0 30px;
+  width: 150px;
+  height: 60px;
+  border-radius: 5px;
+  color: white;
+}
+
 #commandSlider{
   z-index: 10;
   display: none;
@@ -40,10 +51,20 @@
 
 #lightbox_prev, #lightbox_next{
   color: $primary-color;
-  height: 29.64px;
-  width: 48px;
+  position: absolute;
+  cursor: pointer;
+}
+
+#lightbox_prev{
+  left: 0;
+}
+
+#lightbox_next{
+  right: 0;
 }
 
 button{
-  position: absolute;
+  // position: absolute;
+  border: none;
+  cursor: pointer;
 }
