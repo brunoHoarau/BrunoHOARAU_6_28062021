@@ -7,8 +7,6 @@ const main = document.getElementById('article_index');
 let headerNav = document.getElementById('navUl');
 let tagsNav = document.querySelectorAll('li');
 const toContent = document.getElementById('toContent');
-console.log(tagsNav)
-
 
 main.innerHTML = '';
 let allPhotographers = [];

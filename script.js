@@ -306,6 +306,7 @@ function liClick(value){
 // window.addEventListener('scroll', showTopContent)
 let vertical = -1;
   window.onscroll =()=>{showTop()};
+  
   function showTop() {
   vertical = window.scrollY;
   if(vertical > 100){

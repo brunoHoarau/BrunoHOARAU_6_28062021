@@ -9,7 +9,9 @@ const articleSortBy = document.getElementById('article_sortBy');
 const gallery = document.getElementById('gallery');
 const modal = document.getElementById('modal');
 let imgCard;
-const value = "Popularité";
+const valueSelected = "Popularité";
+const likesElmts = document.getElementsByClassName('lImg_likes');  
+
 
 
 let allmedia = [];
@@ -41,7 +43,9 @@ function fetchOnePhotographerMedia(){
     .then(res => res.json())
     .then( function (datas) {
       getDatas(datas);
-      setDatas(datas)
+      setDatas(datas);
+      updateElmt(); 
+
     })
     .catch(error => alert ("Erreur : " + error));
 }
@@ -78,9 +82,22 @@ function getDatas(datas){
 
 function setDatas(){
   showTotalLikes();
-  sortBy(value);
+  sortBy(valueSelected);
+  console.log(heartElmts.length);
 } 
 
+function updateElmt(){
+  updateLikes();
+  }
+
+function updateLikes(){
+ 
+
+  }
+
+function keydownIncrement(numb){
+  increment(numb);
+}
 
 
 const elmtFactory = (nodeName, attribute, ...children) => {
@@ -99,17 +116,17 @@ const elmtFactory = (nodeName, attribute, ...children) => {
     return elmt;
   }
 
-  function sortBy(value){
-    if(value == 'Popularité' || "" ){
+  function sortBy(valueSelected){
+    if(valueSelected == 'Popularité' || "" ){
      allmedia.sort((a,b)=> { return a.likes > b.likes ? -1 : ""})
      imgCardFactory(gallery);
     }
-    if(value == 'Date'){
+    if(valueSelected == 'Date'){
      allmedia.sort((a,b)=> { return a.date < b.date ? -1 : ""})
      console.log(allmedia)
      imgCardFactory(gallery);
     }
-    if(value == 'Titre'){
+    if(valueSelected == 'Titre'){
      allmedia.sort((a,b)=> { return a.title < b.title ? -1 : ""})
      console.log(allmedia)
      imgCardFactory(gallery);
@@ -124,17 +141,17 @@ const elmtFactory = (nodeName, attribute, ...children) => {
       if(elmt.image){
       numberTotalLikes += elmt.likes;
       console.log(numberTotalLikes);
-    }
-  })
-  console.log(allmedia)
+      }
+    })
   totalLikes = elmtFactory('article',{class:'totalLikes'}, 
-    elmtFactory('section',{ class:'totalLikes_section'}, numberTotalLikes.toString(),
-      elmtFactory('img',{ src:'./public/coeurBlack.svg', alt:'likes'})),
+    elmtFactory('section',{ class:'totalLikes_section', value:numberTotalLikes}, numberTotalLikes.toString(),
+      elmtFactory('img',{ src:'./public/coeur.svg', id:'totalLikes_img', alt:'likes'})),
     elmtFactory('section',{ class:'totalLikes_section_price'}, price.toString()+"€ / jour"),
     
     );
   photographerHead.appendChild(totalLikes);
-  }
+}
+
 function showPhotographerHeader(photographer){
 
   const head = elmtFactory('section',{ class:'profile'},
@@ -273,6 +290,7 @@ mainPhotographer.appendChild(lightbox_command);
 
 
 function imgCardFactory(element){
+
       let number = 1;
       let numbLike  = 0;
       element.innerHTML = "";
@@ -303,7 +321,7 @@ function imgCardFactory(element){
         )
         let heart = elmtFactory(
           'img',
-          {src:'./public/coeur.svg',class:'lImg_svg', alt:'likes' , value:elmt.likes, onclick:'increment('+numbLike+')',tabIndex:0},
+          {src:'./public/coeur.svg',class:'lImg_svg', alt:'likes' , value:elmt.likes, onclick:'increment('+numbLike+')',onkeydown:'if(event.code === "Enter"){keydownIncrement('+numbLike+')}',tabIndex:0},
         )
 
       
@@ -344,7 +362,7 @@ function imgCardFactory(element){
         ,)
         let heart = elmtFactory(
           'img',
-          {src:'./public/coeur.svg',class:'lImg_svg' , value:elmt.likes, onclick:'increment('+numbLike+')',tabIndex:0},
+          {src:'./public/coeur.svg',class:'lImg_svg' , value:elmt.likes, onclick:'increment('+numbLike+')',onkeydown:'if(event.code === "Enter"){keydownIncrement('+numbLike+')}',tabIndex:0},
         )
         sectionCard.appendChild(imgCard);
       likesGroup.appendChild(likes);
@@ -365,18 +383,6 @@ function imgCardFactory(element){
     
   }
 
-
-  
-
-
-
-//   const miniModal = elmtFactory('div',{class:'miniModal'},
-//     elmtFactory('div',{class:'miniModal_totalLikes'},totalLikes.toString()),
-//     elmtFactory('img',{src:'./public/coeur.svg',class:'lImg_svg', alt:'likes'},)
-//   )
-// mainPhotographer.appendChild(miniModal);
-
-  const likesElmts = document.getElementsByClassName('lImg_likes');  
   const heartElmts = document.getElementsByClassName('lImg_svg');
 
   function increment(numb){
@@ -384,11 +390,16 @@ function imgCardFactory(element){
     plus ++;
     likesElmts[numb].innerHTML = plus;
     heartElmts[numb].setAttribute('value', ''+plus+'');
-    
+    const totalLikesSection = document.getElementsByClassName('totalLikes_section')[0];
+    const totalLikesImg = document.getElementById('totalLikes_img');
+    let totalLikesValue = document.getElementsByClassName('totalLikes_section')[0].getAttribute('value');
+    totalLikesValue ++;
+    console.log(totalLikesValue)
+    totalLikesSection.setAttribute('value', totalLikesValue)
+    totalLikesSection.innerHTML = totalLikesValue.toString();
+    totalLikesSection.appendChild(totalLikesImg)
   }
-  
-  
-  
+
   const galleryModal = document.getElementById('gallery');
   const galleryElmt = document.getElementsByClassName('section_card');
   const galleryImg = document.getElementsByClassName('section_card_img');
@@ -447,7 +458,6 @@ function close_lightbox(){
   }
 
 document.addEventListener('keydown', (e)=>{
-  // e.preventDefault();
   if(e.code === 'ArrowLeft'){
     nextPrev(-1)
   } else if(e.code === 'ArrowRight'){
@@ -458,7 +468,9 @@ document.addEventListener('keydown', (e)=>{
 })
 
 
-  
+
+
+
   
   
   
