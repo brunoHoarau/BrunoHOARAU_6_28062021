@@ -1,8 +1,9 @@
+// recovery URL prams
 const queryStringUrlId = window.location.search;
 const urlParams = new URLSearchParams(queryStringUrlId);
 let paramsTag = urlParams.get('tag');
 
-// Recupération DOM
+// Recovery DOM elmts
 const main = document.getElementById('article_index');
 let headerNav = document.getElementById('navUl');
 let tagsNav = document.querySelectorAll('li');
@@ -11,6 +12,8 @@ const toContent = document.getElementById('toContent');
 main.innerHTML = '';
 let allPhotographers = [];
 let tagsArray = [];
+
+// creat class to simplify the use of data 
 
 class Photographer {
   constructor(name,id,city,country,portrait,tagline,price,tags){
@@ -25,6 +28,7 @@ class Photographer {
   }
 }
 
+// to init all data of photographers
 function initData(){
   fetch('./FishEyeData.json')
     .then(res => res.json())
@@ -36,7 +40,7 @@ function initData(){
     .catch(error => alert ("Erreur : " + error));
 }
 
-
+// to fecth data photographer one by one 
 function fetchDataPhotographer(){
   fetch('./FishEyeData.json')
     .then(res => res.json())
@@ -51,7 +55,7 @@ function fetchDataPhotographer(){
     })
     .catch(error => alert ("Erreur : " + error));
 }
-
+// to sort by tag
 function fetchBytag(){
   fetch('./FishEyeData.json')
     .then(res => res.json())
@@ -69,13 +73,31 @@ function fetchBytag(){
     .catch(error => alert ("Erreur : " + error));
 }
 
+// pattern for creat Dom elmts
+const elmtFactory = (nodeName, attribute, ...children) => {
+  const elmt = document.createElement(nodeName)
+
+  for(key in attribute){
+    elmt.setAttribute(key, attribute[key])
+  }
+
+  children.forEach(child => {
+    if (typeof child === 'string'){
+      elmt.appendChild(document.createTextNode(child))
+    } else {
+      elmt.appendChild(child)
+    }
+  })
+  return elmt;
+}
+
 if(paramsTag){
   fetchBytag();
-  console.log('Its true');
 }else{
   fetchDataPhotographer();
 }
 
+// show tags into nav
 function showTagsNav() {
   tagsArray.forEach( tags => { 
     headerNav.innerHTML += tags;
@@ -83,7 +105,7 @@ function showTagsNav() {
   
 }
 
-
+// event when clixk on li
 headerNav.addEventListener('click', (ul) => {
   const liValue = ul.target.getAttribute('value');
  main.innerHTML = "";
@@ -97,7 +119,7 @@ headerNav.addEventListener('click', (ul) => {
 })
 
 
-
+// to recovery value & format case
 function getTagsElement(value){
   let brutValue = value;
   value = value.charAt(0).toUpperCase() + value.slice(1);
@@ -107,7 +129,7 @@ function getTagsElement(value){
 }
 
 
-
+// create card of photographers
 function createCards(photographer){
   const sectionCard = elmtFactory(
     "section",
@@ -142,23 +164,7 @@ function createCards(photographer){
   
 }
 
-const elmtFactory = (nodeName, attribute, ...children) => {
-  const elmt = document.createElement(nodeName)
-
-  for(key in attribute){
-    elmt.setAttribute(key, attribute[key])
-  }
-
-  children.forEach(child => {
-    if (typeof child === 'string'){
-      elmt.appendChild(document.createTextNode(child))
-    } else {
-      elmt.appendChild(child)
-    }
-  })
-  return elmt;
-}
-
+// funtion evnts click on li ( tags )
 function liClick(value){
   var getValue = value.getAttribute('value')
   console.log(getValue);
@@ -172,7 +178,7 @@ function liClick(value){
   initData();
 }
 
-// window.addEventListener('scroll', showTopContent)
+// to retunr on the top
 let vertical = -1;
   window.onscroll =()=>{showTop()};
   function showTop() {

@@ -1,6 +1,10 @@
+// Recovery Url params
+
 const queryStringUrlId = window.location.search;
 const urlParams = new URLSearchParams(queryStringUrlId);
 let paramsId = urlParams.get('id');
+
+// Recovery somes elments & creat tab
 
 const body = document.getElementsByTagName('BODY')[0];
 const photographerHead = document.getElementById('photographer_header');
@@ -20,6 +24,8 @@ let arrayLikes = [];
 let firstName;
 let price;
 
+
+// to fecth to all data
 function fetchOnePhotographerData(){
   fetch('./FishEyeData.json')
     .then(res => res.json())
@@ -38,19 +44,8 @@ function fetchOnePhotographerData(){
 }
 fetchOnePhotographerData();
 
-function fetchOnePhotographerMedia(){
-  fetch('./FishEyeData.json')
-    .then(res => res.json())
-    .then( function (datas) {
-      getDatas(datas);
-      setDatas(datas);
-      updateElmt(); 
 
-    })
-    .catch(error => alert ("Erreur : " + error));
-}
-fetchOnePhotographerMedia();
-
+// creat class to simplify the use of data 
 
 class Photographer {
   constructor(name,id,city,country,portrait,tagline,price,tags){
@@ -65,6 +60,21 @@ class Photographer {
   }
 }
 
+// to fecth one photographer specifically
+
+function fetchOnePhotographerMedia(){
+  fetch('./FishEyeData.json')
+    .then(res => res.json())
+    .then( function (datas) {
+      getDatas(datas);
+      setDatas(datas);
+
+    })
+    .catch(error => alert ("Erreur : " + error));
+}
+fetchOnePhotographerMedia();
+
+// function to loop and extract data
 function getDatas(datas){
   for( data of datas.media){
     if ( data.photographerId == paramsId){
@@ -80,26 +90,19 @@ function getDatas(datas){
   }
 }
 
+// to exploit data
 function setDatas(){
   showTotalLikes();
   sortBy(valueSelected);
   console.log(heartElmts.length);
 } 
 
-function updateElmt(){
-  updateLikes();
-  }
-
-function updateLikes(){
- 
-
-  }
-
+// to incrment likes by keydown prop
 function keydownIncrement(numb){
   increment(numb);
 }
 
-
+// pattern tp create dom elmts
 const elmtFactory = (nodeName, attribute, ...children) => {
   const elmt = document.createElement(nodeName)
     for(key in attribute){
@@ -116,7 +119,8 @@ const elmtFactory = (nodeName, attribute, ...children) => {
     return elmt;
   }
 
-  function sortBy(valueSelected){
+// function to sort
+function sortBy(valueSelected){
     if(valueSelected == 'Popularité' || "" ){
      allmedia.sort((a,b)=> { return a.likes > b.likes ? -1 : ""})
      imgCardFactory(gallery);
@@ -133,6 +137,7 @@ const elmtFactory = (nodeName, attribute, ...children) => {
     }
   }
 
+//to show the totals of likes 
   function showTotalLikes(){
     let numberTotalLikes = 0;
     let totalLikes;
@@ -152,6 +157,7 @@ const elmtFactory = (nodeName, attribute, ...children) => {
   photographerHead.appendChild(totalLikes);
 }
 
+// to show the doata of one photographer by pattern
 function showPhotographerHeader(photographer){
 
   const head = elmtFactory('section',{ class:'profile'},
@@ -180,6 +186,7 @@ function showPhotographerHeader(photographer){
     sortBySelect.appendChild(option);
   })
 
+// creat the form
   const form =
     elmtFactory('form', {id:'section_form', role:'dialog'},
       elmtFactory('button',{id:'close_contact'},
@@ -200,11 +207,11 @@ function showPhotographerHeader(photographer){
     )
  
 
-
-  let ulCard = elmtFactory(
+// to create list of tags
+let ulCard = elmtFactory(
      'ul',
      {class:'card_ul'},
-    )
+  )
 
   let li = photographer.tags.map( (value) => {
     return ("<li class='card_ul_li' ><a href='index.html?tag="+value+"' ><span>#</span>"
@@ -220,7 +227,7 @@ function showPhotographerHeader(photographer){
     ulCard.innerHTML += (li);
     // Contact Me event
     const contactButton = document.getElementById('card_contact');
-     //to Open
+     //to Open contact form
     contactButton.addEventListener('click', (e) => {
       sectionContact.style.display='flex';
       sectionContact.setAttribute('aria-hidden','false');
@@ -232,7 +239,7 @@ function showPhotographerHeader(photographer){
     const sectionForm = document.getElementById('section_form');
     sectionForm.setAttribute('aria-describedby', 'contact');
 
-      //to close
+//to close contact form
     const closeContact = document.getElementById('close_contact');
     closeContact.addEventListener('click', (e)=> {
       e.preventDefault();
@@ -244,7 +251,6 @@ function showPhotographerHeader(photographer){
       sectionContact.setAttribute('aria-hidden','true');
       mainPhotographer.setAttribute('aria-hidden','false');
       photographerHead.setAttribute('aria-hidden','false');
-      
     }
 
     // to send ** msg into console
@@ -264,7 +270,8 @@ function showPhotographerHeader(photographer){
     })
     
     }
-    
+
+// creat lightbox command
 const lightbox_command = 
 elmtFactory('article',{ id:'commandSlider'},
   elmtFactory('button',{ id:'commandSlider_close', class:'botton_close', onclick:'close_lightbox()'},
@@ -288,7 +295,7 @@ mainPhotographer.appendChild(lightbox_command);
 
 
 
-
+// create to show image
 function imgCardFactory(element){
 
       let number = 1;
@@ -302,7 +309,7 @@ function imgCardFactory(element){
     if( elmt.image){
       let imgCard = elmtFactory(
         'img',
-        { class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.image, class:'section_card_img' ,id:'gallery_img', alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')', tabIndex:0},
+        { class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.image, class:'section_card_img' ,id:'gallery_img', alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')', onkeydown:'if(event.code === "Enter"){showLightbox('+number+')}', tabIndex:0},
         );
       let titleImg = elmtFactory(
         'p',
@@ -321,7 +328,7 @@ function imgCardFactory(element){
         )
         let heart = elmtFactory(
           'img',
-          {src:'./public/coeur.svg',class:'lImg_svg', alt:'likes' , value:elmt.likes, onclick:'increment('+numbLike+')',onkeydown:'if(event.code === "Enter"){keydownIncrement('+numbLike+')}',tabIndex:0},
+          {src:'./public/coeur.svg',class:'lImg_svg', alt:'likes' , value:elmt.likes, onclick:'increment('+numbLike+')',onkeydown:'if(event.code === "Space"){keydownIncrement('+numbLike+')}',tabIndex:0},
         )
 
       
@@ -337,7 +344,7 @@ function imgCardFactory(element){
         let imgCard = elmtFactory(
           
         'video',
-        {class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.video, class:'section_card_img' ,id:'gallery_img', type:"video/mp4", alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')',tabIndex:0},
+        {class:'lImg', src:"./public/"+firstName[0]+"/"+elmt.video, class:'section_card_img' ,id:'gallery_img', type:"video/mp4", alt:elmt.title+', closeup view', onclick:'showLightbox('+number+')', onkeydown:'if(event.code === "Enter"){showLightbox('+number+')}',tabIndex:0},
         elmtFactory(
           'p',
           {class:'lImg_tilte',tabIndex:0},
@@ -362,7 +369,7 @@ function imgCardFactory(element){
         ,)
         let heart = elmtFactory(
           'img',
-          {src:'./public/coeur.svg',class:'lImg_svg' , value:elmt.likes, onclick:'increment('+numbLike+')',onkeydown:'if(event.code === "Enter"){keydownIncrement('+numbLike+')}',tabIndex:0},
+          {src:'./public/coeur.svg',class:'lImg_svg' , value:elmt.likes, onclick:'increment('+numbLike+')',onkeydown:'if(event.code === "Space"){keydownIncrement('+numbLike+')}',tabIndex:0},
         )
         sectionCard.appendChild(imgCard);
       likesGroup.appendChild(likes);
@@ -412,6 +419,7 @@ function imgCardFactory(element){
     showLightbox( currentNumberSlide += n);
   }
   
+// to show ligthbox - slider
   function showLightbox(number){
     currentNumberSlide = number;
     if(currentNumberSlide < 1){ currentNumberSlide = galleryElmt.length };
@@ -439,7 +447,7 @@ function imgCardFactory(element){
     
   }
     
-  
+// to close lightbox - slider
 function close_lightbox(){
   let lightboxImg = document.getElementById('lightbox_img');
   lightboxImg ? lightboxImg.setAttribute('id', 'gallery_img') : '';
@@ -457,23 +465,17 @@ function close_lightbox(){
     }
   }
 
+// evnt when keydow 
 document.addEventListener('keydown', (e)=>{
+  if(e.code === 'Space'){
+    e.stopPropagation();
+    e.preventDefault()
+  }
   if(e.code === 'ArrowLeft'){
     nextPrev(-1)
   } else if(e.code === 'ArrowRight'){
     nextPrev(1)
   } else if(e.code === 'Escape' ){
-    close_lightbox()
+    close_lightbox();
   }
 })
-
-
-
-
-
-  
-  
-  
-  
-  
-  
