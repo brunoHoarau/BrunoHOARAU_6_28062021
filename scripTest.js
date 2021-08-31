@@ -105,7 +105,7 @@ function showTagsNav() {
   
 }
 
-// event when clixk on li
+// event when clixk on list elmt
 headerNav.addEventListener('click', (ul) => {
   const liValue = ul.target.getAttribute('value');
  main.innerHTML = "";
@@ -136,8 +136,7 @@ function createCards(photographer){
     {class:'card'},
   )
 
-  const head = elmtFactory(
-    'a',
+  const head = elmtFactory('a',
     { href:'photographer-page.html?id='+photographer.id},
     elmtFactory('img',{class:'card_picture', src:'./public/'+photographer.portrait, alt:''},),
     elmtFactory('h2',{class:'card_name'},photographer.name),

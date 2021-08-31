@@ -25,7 +25,7 @@ let firstName;
 let price;
 
 
-// to fecth to all data
+// to fecth to all data and fecht on Only One photographer
 function fetchOnePhotographerData(){
   fetch('./FishEyeData.json')
     .then(res => res.json())
@@ -94,7 +94,6 @@ function getDatas(datas){
 function setDatas(){
   showTotalLikes();
   sortBy(valueSelected);
-  console.log(heartElmts.length);
 } 
 
 // to incrment likes by keydown prop
@@ -145,7 +144,6 @@ function sortBy(valueSelected){
     allmedia.forEach( elmt => {
       if(elmt.image){
       numberTotalLikes += elmt.likes;
-      console.log(numberTotalLikes);
       }
     })
   totalLikes = elmtFactory('article',{class:'totalLikes'}, 
@@ -390,44 +388,39 @@ function imgCardFactory(element){
     
   }
 
-  const heartElmts = document.getElementsByClassName('lImg_svg');
+const heartElmts = document.getElementsByClassName('lImg_svg');
 
-  function increment(numb){
-    var plus = heartElmts[numb].getAttribute('value');
-    plus ++;
-    likesElmts[numb].innerHTML = plus;
-    heartElmts[numb].setAttribute('value', ''+plus+'');
-    const totalLikesSection = document.getElementsByClassName('totalLikes_section')[0];
-    const totalLikesImg = document.getElementById('totalLikes_img');
-    let totalLikesValue = document.getElementsByClassName('totalLikes_section')[0].getAttribute('value');
-    totalLikesValue ++;
-    console.log(totalLikesValue)
-    totalLikesSection.setAttribute('value', totalLikesValue)
-    totalLikesSection.innerHTML = totalLikesValue.toString();
-    totalLikesSection.appendChild(totalLikesImg)
-  }
+function increment(numb){
+  var plus = heartElmts[numb].getAttribute('value');
+  plus ++;
+  likesElmts[numb].innerHTML = plus;
+  heartElmts[numb].setAttribute('value', ''+plus+'');
+  const totalLikesSection = document.getElementsByClassName('totalLikes_section')[0];
+  const totalLikesImg = document.getElementById('totalLikes_img');
+  let totalLikesValue = document.getElementsByClassName('totalLikes_section')[0].getAttribute('value');
+  totalLikesValue ++;
+  totalLikesSection.setAttribute('value', totalLikesValue)
+  totalLikesSection.innerHTML = totalLikesValue.toString();
+  totalLikesSection.appendChild(totalLikesImg)
+}
 
-  const galleryModal = document.getElementById('gallery');
-  const galleryElmt = document.getElementsByClassName('section_card');
-  const galleryImg = document.getElementsByClassName('section_card_img');
-  const commandSlider = document.getElementById('commandSlider');
-  const allHeart = document.getElementsByClassName('groupHeart');
-  
-  let currentNumberSlide = 0;
+const galleryModal = document.getElementById('gallery');
+const galleryElmt = document.getElementsByClassName('section_card');
+const galleryImg = document.getElementsByClassName('section_card_img');
+const commandSlider = document.getElementById('commandSlider');
+const allHeart = document.getElementsByClassName('groupHeart');
 
-  function nextPrev(n){
-    showLightbox( currentNumberSlide += n);
-  }
+let currentNumberSlide = 0;
+
+function nextPrev(n){
+  showLightbox( currentNumberSlide += n);
+}
   
 // to show ligthbox - slider
   function showLightbox(number){
     currentNumberSlide = number;
     if(currentNumberSlide < 1){ currentNumberSlide = galleryElmt.length };
     if(currentNumberSlide > galleryElmt.length){ currentNumberSlide = 1 };
-    console.log('entree function: '+currentNumberSlide );
-    if(currentNumberSlide < 1){ currentNumberSlide = galleryElmt.length };
-    if(currentNumberSlide > galleryElmt.length){ currentNumberSlide = 1 };
-    console.log('sotie condition function: '+currentNumberSlide );
     let lightboxImg = document.getElementById('lightbox_img');
     let lightboxSection = document.getElementById('lightbox_section');
     lightboxSection ? lightboxSection.removeAttribute('id') : '';
@@ -443,8 +436,6 @@ function imgCardFactory(element){
     galleryImg[currentNumberSlide-1].setAttribute('id', 'lightbox_img');
     commandSlider.style.display= 'flex';
     gallery.setAttribute('class', 'lightbox');
-    console.log('sotie function: '+currentNumberSlide );
-    
   }
     
 // to close lightbox - slider
