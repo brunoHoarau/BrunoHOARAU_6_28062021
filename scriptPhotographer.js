@@ -281,12 +281,12 @@ const lightboxCommand = elmtFactory('article', { id: 'commandSlider'},
   ),
   elmtFactory(
     'a', {id: 'lightbox_next', class: 'button_next', onclick: 'nextPrev(1)'},
-      elmtFactory('img', { src: './public/next.svg', alt: 'Next image'}, ),
+      elmtFactory('img', { src: './public/next.svg', alt: 'Next image'}, )),
   elmtFactory(
     'a', { id: 'lightbox_prev', class: 'button_prev', onclick: 'nextPrev(-1)'},
       elmtFactory('img', { src: './public/previous.svg', alt: 'Previous image'}, )
   )
-));
+);
 
 
 
