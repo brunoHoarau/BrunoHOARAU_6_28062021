@@ -288,11 +288,7 @@ const lightboxCommand = elmtFactory('article', { id: 'commandSlider'},
   )
 );
 
-
-
 mainPhotographer.appendChild(lightboxCommand);
-
-
 
 // create to show image
 
