@@ -32,50 +32,6 @@ class Photographer {
   }
 }
 
-// to init all data of photographers
-function initData(){
-  fetch('./FishEyeData.json')
-    .then(res => res.json())
-    .then( function (datas) {
-      for( data of datas.photographers){
-        allPhotographers.push(data);
-      }
-    })
-    .catch(error => alert ('Erreur : ' + error)); // eslint-disable-line no-alert
-}
-
-// to fecth data photographer one by one
-function fetchDataPhotographer(){
-  fetch('./FishEyeData.json')
-    .then(res => res.json())
-    .then( function (datas) {
-      for( data of datas.photographers){
-        allPhotographers.push(data);
-        let photographer = new Photographer(data.name, data.id, data.city, data.country, data.portrait, data.tagline, data.price, data.tags);
-        createCards(photographer);
-        photographer.tags.forEach(value => { getTagsElement(value);});
-      }
-  showTagsNav();
-    })
-    .catch(error => alert ('Erreur : ' + error)); // eslint-disable-line no-alert
-}
-// to sort by tag
-function fetchBytag(){
-  fetch('./FishEyeData.json')
-    .then(res => res.json())
-    .then( function (datas) {
-      for( data of datas.photographers){
-        allPhotographers.push(data);
-        let photographer = new Photographer(data.name, data.id, data.city, data.country, data.portrait, data.tagline, data.price, data.tags);
-        if( photographer.tags.includes(paramsTag)){
-            createCards(photographer);
-          }
-        photographer.tags.forEach((value) => { getTagsElement(value);});
-      }
-  showTagsNav();
-    })
-    .catch(error => alert ('Erreur : ' + error)); // eslint-disable-line no-alert
-}
 
 // pattern for creat Dom elmts
 const elmtFactory = (nodeName, attribute, ...children) => {
@@ -96,11 +52,7 @@ const elmtFactory = (nodeName, attribute, ...children) => {
   return elmt;
 };
 
-if(paramsTag){
-  fetchBytag();
-}else{
-  fetchDataPhotographer();
-}
+
 
 // show tags into nav
 function showTagsNav() {
@@ -109,36 +61,20 @@ function showTagsNav() {
    });
 }
 
-// event when clixk on list elmt
-headerNav.addEventListener('click', (ul) => {
-  const liValue = ul.target.getAttribute('value');
- main.innerHTML = '';
-  for( photographer of allPhotographers){
-    allPhotographers = [];
-    if( photographer.tags.includes(liValue)){
-      createCards(photographer);
-    }
-  }
-  initData();
-});
-
-
-// to recovery value & format case
-function getTagsElement(value){
-  let brutValue = value;
-  value = value.charAt(0).toUpperCase() + value.slice(1);
-  value = '<a href="index.html?tag=' + brutValue + '"  class="card_ul_li">#<span>'
-   + value + '</span></a>';
-        tagsArray.includes(value) ? '' : tagsArray.push(value);
-}
-
-
 // create card of photographers
 function createCards(photographer){
   const sectionCard = elmtFactory(
     'section',
     {class: 'card'},
   );
+
+
+
+// to recovery value & format case
+// function getTagsElement(value){
+
+// }
+
 
   const head = elmtFactory('a',
     { href: 'photographer-page.html?id=' + photographer.id},
@@ -180,3 +116,80 @@ if(vertical > 100){
 }
 }
   window.onscroll = ()=>{showTop();};
+
+
+  // to init all data of photographers
+function initData(){
+  fetch('./FishEyeData.json')
+    .then(res => res.json())
+    .then( function (datas) {
+      for( data of datas.photographers){
+        allPhotographers.push(data);
+      }
+    })
+    .catch(error => alert ('Erreur : ' + error)); // eslint-disable-line no-alert
+}
+
+// event when clixk on list elmt
+headerNav.addEventListener('click', (ul) => {
+  const liValue = ul.target.getAttribute('value');
+ main.innerHTML = '';
+  for( let photographer of allPhotographers){
+    allPhotographers = [];
+    if( photographer.tags.includes(liValue)){
+      createCards(photographer);
+    }
+  }
+  initData();
+});
+
+// to fecth data photographer one by one
+function fetchDataPhotographer(){
+  fetch('./FishEyeData.json')
+    .then(res => res.json())
+    .then( function (datas) {
+      for( data of datas.photographers){
+        allPhotographers.push(data);
+        let photographer = new Photographer(data.name, data.id, data.city, data.country, data.portrait, data.tagline, data.price, data.tags);
+        createCards(photographer);
+        /* eslint-disable */
+        photographer.tags.forEach(value => {   let brutValue = value;
+          value = value.charAt(0).toUpperCase() + value.slice(1);
+          value = '<a href="index.html?tag=' + brutValue + '"  class="card_ul_li">#<span>'
+           + value + '</span></a>';
+                tagsArray.includes(value) ? '' : tagsArray.push(value);});
+        /* eslint-enable */
+      }
+  showTagsNav();
+    })
+    .catch(error => alert ('Erreur : ' + error)); // eslint-disable-line no-alert
+}
+// to sort by tag
+function fetchBytag(){
+  fetch('./FishEyeData.json')
+    .then(res => res.json())
+    .then( function (datas) {
+      for( data of datas.photographers){
+        allPhotographers.push(data);
+        let photographer = new Photographer(data.name, data.id, data.city, data.country, data.portrait, data.tagline, data.price, data.tags);
+        if( photographer.tags.includes(paramsTag)){
+            createCards(photographer);
+          }
+        /* eslint-disable */
+        photographer.tags.forEach(value => {   let brutValue = value;
+          value = value.charAt(0).toUpperCase() + value.slice(1);
+          value = '<a href="index.html?tag=' + brutValue + '"  class="card_ul_li">#<span>'
+           + value + '</span></a>';
+                tagsArray.includes(value) ? '' : tagsArray.push(value);});
+        /* eslint-enable */
+      }
+  showTagsNav();
+    })
+    .catch(error => alert ('Erreur : ' + error)); // eslint-disable-line no-alert
+}
+
+if(paramsTag){
+  fetchBytag();
+}else{
+  fetchDataPhotographer();
+}

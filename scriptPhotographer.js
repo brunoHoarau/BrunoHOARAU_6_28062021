@@ -1,5 +1,7 @@
-/* eslint no-console: ["log", { allow: [log] }] */
 // Recovery Url params
+/* eslint-disable no-debugger, no-console */
+/*global URLSearchParams*/
+/*eslint-env es6*/
 
 const queryStringUrlId = window.location.search;
 const urlParams = new URLSearchParams(queryStringUrlId);
@@ -17,33 +19,11 @@ const likesElmts = document.getElementsByClassName('lImg_likes');
 
 let allmedia = [];
 let arrayImg = [];
-let arrayLikes = [];
 let firstName;
 let pricePhotograph;
-let data;
-
-
-// to fecth to all data and fecht on Only One photographer
-function fetchOnePhotographerData(){
-  fetch('./FishEyeData.json')
-    .then(res => res.json())
-    .then( function (datas) {
-      for( data of datas.photographers){
-        let photographer = new Photographer(data.name, data.id, data.city, data.country, data.portrait, data.tagline, data.price, data.tags);
-        if ( data.id == paramsId){
-          let name = photographer.name;
-          firstName = name.split(' ');
-          showPhotographerHeader(photographer);
-          pricePhotograph = photographer.price;
-        }
-      }
-    })
-    .catch(error => alert ('Erreur : ' + error)); // eslint-disable-line no-alert
-}
-fetchOnePhotographerData();
-
 
 // creat class to simplify the use of data
+
 
 class Photographer {
   constructor(name, id, city, country, portrait, tagline, price, tags){
@@ -58,51 +38,19 @@ class Photographer {
   }
 }
 
-// to fecth one photographer specifically
 
-function fetchOnePhotographerMedia(){
-  fetch('./FishEyeData.json')
-    .then(res => res.json())
-    .then( function (datas) {
-      getDatas(datas);
-      setDatas(datas);
-
-    })
-    .catch(error => alert ('Erreur : ' + error)); // eslint-disable-line no-alert
-}
-fetchOnePhotographerMedia();
-
-// function to loop and extract data
-function getDatas(datas){
-  for( data of datas.media){
-    if ( data.photographerId == paramsId){
-      arrayLikes.push(data.likes);
-      allmedia.push(data);
-      if(data.image){
-        arrayImg.push(data.image);
-      } else {
-        arrayImg.push(data.video);
-      }
-    }
-  }
-}
-
-// to exploit data
-function setDatas(){
-  showTotalLikes();
-  let valueSelected = 'Popularité';
-  sortBy(valueSelected);
-}
 
 // to incrment likes by keydown prop
+/* eslint-disable */
 function keydownIncrement(numb){
   increment(numb);
 }
+/* eslint-enable */
 
 // pattern tp create dom elmts
 const elmtFactory = (nodeName, attribute, ...children) => {
   const elmt = document.createElement(nodeName);
-    for(key in attribute){
+    for(let key in attribute){
       elmt.setAttribute(key, attribute[key]);
     }
 
@@ -116,17 +64,88 @@ const elmtFactory = (nodeName, attribute, ...children) => {
     return elmt;
   };
 
+  function imgCardFactory(element){
+
+    let number = 1;
+    let numbLike = 0;
+    element.innerHTML = '';
+    allmedia.forEach( elmt => {
+    const sectionCard = elmtFactory(
+      'section',
+      { class: 'section_card'}
+    );
+  if( elmt.image){
+    let imgCard = elmtFactory(
+      'img',
+      {class: 'section_card_img', src: './public/' + firstName[0] + '/' + elmt.image, id: 'gallery_img', alt: elmt.title + ', closeup view', onclick: 'showLightbox(' + number + ')', onkeydown: 'if(event.code === "Enter"){showLightbox(' + number + ')}', tabIndex: 0},
+      );
+    let titleImg = elmtFactory('p', {class: 'lImg_tilte', tabIndex: 0}, elmt.title);
+    const cardFooter = elmtFactory('div', { class: 'card_footer'}, );
+    const likesGroup = elmtFactory('div', {class: 'groupHeart'}, );
+    let likes = elmtFactory('p', {class: 'lImg_likes', tabIndex: 0}, elmt.likes.toString(), );
+      let heart = elmtFactory('img', {src: './public/coeur.svg', class: 'lImg_svg', alt: 'likes', value: elmt.likes, onclick: 'increment(' + numbLike + ')', onkeydown: 'if(event.code === "Space"){keydownIncrement(' + numbLike + ')}', tabIndex: 0}, );
+
+
+    sectionCard.appendChild(imgCard);
+    likesGroup.appendChild(likes);
+    likesGroup.appendChild(heart);
+    element.appendChild(sectionCard);
+    sectionCard.appendChild(cardFooter);
+    cardFooter.appendChild(titleImg);
+    cardFooter.appendChild(likesGroup);
+
+    } else {
+      let videoCard = elmtFactory(
+      'video',
+      { src: './public/' + firstName[0] + '/' + elmt.video, class: 'section_card_img', id: 'gallery_img', type: 'video/mp4', alt: elmt.title + ', closeup view', onclick: 'showLightbox(' + number + ')', onkeydown: 'if(event.code === "Enter"){showLightbox(' + number + ')}', tabIndex: 0},
+      elmtFactory(
+        'p', {class: 'lImg_tilte', tabIndex: 0}, elmt.title), );
+      let titleImg = elmtFactory(
+        'p',
+        {class: 'lImg_tilte', tabIndex: 0},
+        elmt.title
+      );
+      const cardFooter = elmtFactory('div', { class: 'card_footer'}, );
+      const likesGroup = elmtFactory(
+        'div',
+        {class: 'groupHeart'},
+      );
+      let likes = elmtFactory(
+        'p',
+        {class: 'lImg_likes', tabIndex: 0},
+        elmt.likes.toString(), );
+      let heart = elmtFactory(
+        'img',
+        {src: './public/coeur.svg', class: 'lImg_svg', value: elmt.likes, onclick: 'increment(' + numbLike + ')', onkeydown: 'if(event.code === "Space"){keydownIncrement(' + numbLike + ')}', tabIndex: 0},
+      );
+      sectionCard.appendChild(videoCard);
+    likesGroup.appendChild(likes);
+    likesGroup.appendChild(heart);
+    element.appendChild(sectionCard);
+    sectionCard.appendChild(cardFooter);
+    cardFooter.appendChild(titleImg);
+    cardFooter.appendChild(likesGroup);
+
+    }
+    number += 1;
+    numbLike += 1;
+
+  });
+
+}
+
+
 // function to sort
 function sortBy(valueSelected){
-    if(valueSelected == 'Popularité' || '' ){
+    if(valueSelected === 'Popularité' || '' ){
      allmedia.sort((a, b)=> { return a.likes > b.likes ? -1 : '';});
      imgCardFactory(gallery);
     }
-    if(valueSelected == 'Date'){
+    if(valueSelected === 'Date'){
      allmedia.sort((a, b)=> { return a.date < b.date ? -1 : '';});
      imgCardFactory(gallery);
     }
-    if(valueSelected == 'Titre'){
+    if(valueSelected === 'Titre'){
      allmedia.sort((a, b)=> { return a.title < b.title ? -1 : '';});
      imgCardFactory(gallery);
     }
@@ -174,7 +193,7 @@ function showPhotographerHeader(photographer){
   arraySelect.forEach( elmt => { let option = elmtFactory('option', {value: elmt}, elmt);
     sortBySelect.appendChild(option);
   });
-  sortBySelect.firstChild.selected = "true";
+  sortBySelect.firstChild.selected = 'true';
 
 // creat the form
   const form =
@@ -222,12 +241,7 @@ let ulCard = elmtFactory('ul', {class: 'card_ul'}, );
     const sectionForm = document.getElementById('section_form');
     sectionForm.setAttribute('aria-describedby', 'contact');
 
-//to close contact form
-    const closeContact = document.getElementById('close_contact');
-    closeContact.addEventListener('click', (e)=> {
-      e.preventDefault();
-      closeContactFunction();
-    });
+
 
     function closeContactFunction() {
       sectionContact.style.display = 'none';
@@ -235,6 +249,12 @@ let ulCard = elmtFactory('ul', {class: 'card_ul'}, );
       mainPhotographer.setAttribute('aria-hidden', 'false');
       photographerHead.setAttribute('aria-hidden', 'false');
     }
+    //to close contact form
+    const closeContact = document.getElementById('close_contact');
+    closeContact.addEventListener('click', (e)=> {
+      e.preventDefault();
+      closeContactFunction();
+    });
 
     // to send ** msg into console
     const buttonSend = document.getElementById('submit_contact');
@@ -275,75 +295,6 @@ mainPhotographer.appendChild(lightboxCommand);
 
 
 // create to show image
-function imgCardFactory(element){
-
-      let number = 1;
-      let numbLike = 0;
-      element.innerHTML = '';
-      allmedia.forEach( elmt => {
-      const sectionCard = elmtFactory(
-        'section',
-        { class: 'section_card'}
-      );
-    if( elmt.image){
-      let imgCard = elmtFactory(
-        'img',
-        { class: 'lImg', src: './public/' + firstName[0] + '/' + elmt.image, class: 'section_card_img', id: 'gallery_img', alt: elmt.title +', closeup view', onclick: 'showLightbox(' + number + ')', onkeydown: "if(event.code === 'Enter'){showLightbox(" + number + ")}", tabIndex: 0},
-        );
-      let titleImg = elmtFactory('p', {class: 'lImg_tilte', tabIndex: 0}, elmt.title);
-      const cardFooter = elmtFactory('div', { class: 'card_footer'}, );
-      const likesGroup = elmtFactory('div', {class: 'groupHeart'}, );
-      let likes = elmtFactory('p', {class: 'lImg_likes', tabIndex: 0}, elmt.likes.toString(), );
-        let heart = elmtFactory('img', {src: './public/coeur.svg', class: 'lImg_svg', alt: 'likes', value: elmt.likes, onclick: 'increment(' + numbLike + ')', onkeydown: "if(event.code === 'Space'){keydownIncrement(" + numbLike + ")}", tabIndex: 0}, );
-
-
-      sectionCard.appendChild(imgCard);
-      likesGroup.appendChild(likes);
-      likesGroup.appendChild(heart);
-      element.appendChild(sectionCard);
-      sectionCard.appendChild(cardFooter);
-      cardFooter.appendChild(titleImg);
-      cardFooter.appendChild(likesGroup);
-
-      } else {
-        let videoCard = elmtFactory(
-        'video',
-        {class: 'lImg', src: './public/' + firstName[0] + '/' + elmt.video, class: 'section_card_img', id: 'gallery_img', type: 'video/mp4', alt: elmt.title +', closeup view', onclick: 'showLightbox(' + number + ')', onkeydown: "if(event.code === 'Enter'){showLightbox(" + number + ")}", tabIndex: 0},
-        elmtFactory(
-          'p', {class: 'lImg_tilte', tabIndex: 0}, elmt.title), );
-        let titleImg = elmtFactory(
-          'p',
-          {class: 'lImg_tilte', tabIndex: 0},
-          elmt.title
-        );
-        const cardFooter = elmtFactory('div', { class: 'card_footer'}, );
-        const likesGroup = elmtFactory(
-          'div',
-          {class: 'groupHeart'},
-        );
-        let likes = elmtFactory(
-          'p',
-          {class: 'lImg_likes', tabIndex: 0},
-          elmt.likes.toString(), );
-        let heart = elmtFactory(
-          'img',
-          {src: './public/coeur.svg', class: 'lImg_svg', value: elmt.likes, onclick: 'increment(' + numbLike + ')', onkeydown: "if(event.code === 'Space'){keydownIncrement(" + numbLike + ")}", tabIndex: 0},
-        );
-        sectionCard.appendChild(videoCard);
-      likesGroup.appendChild(likes);
-      likesGroup.appendChild(heart);
-      element.appendChild(sectionCard);
-      sectionCard.appendChild(cardFooter);
-      cardFooter.appendChild(titleImg);
-      cardFooter.appendChild(likesGroup);
-
-      }
-      number += 1; 
-      numbLike += 1;
-
-    });
-
-  }
 
 const heartElmts = document.getElementsByClassName('lImg_svg');
 
@@ -368,9 +319,6 @@ const allHeart = document.getElementsByClassName('groupHeart');
 
 let currentNumberSlide = 0;
 
-function nextPrev(n){
-  showLightbox( currentNumberSlide += n);
-}
 
 // to show ligthbox - slider
   function showLightbox(number){
@@ -381,17 +329,21 @@ function nextPrev(n){
     let lightboxSection = document.getElementById('lightbox_section');
     lightboxSection ? lightboxSection.removeAttribute('id') : '';
     lightboxImg ? lightboxImg.setAttribute('id', 'gallery_img') : '';
-    for( elmt of galleryElmt){
+    for( let elmt of galleryElmt){
       elmt.style.display = 'none';
     }
-    for( elmt of allHeart){
+    for(let elmt of allHeart){
       elmt.style.display = 'none';
     }
-    galleryElmt[currentNumberSlide - 1].style.display='flex';
+    galleryElmt[currentNumberSlide - 1].style.display = 'flex';
     galleryElmt[currentNumberSlide - 1].setAttribute('id', 'lightbox_section');
     galleryImg[currentNumberSlide - 1].setAttribute('id', 'lightbox_img');
     commandSlider.style.display = 'flex';
     gallery.setAttribute('class', 'lightbox');
+  }
+
+  function nextPrev(n){
+    showLightbox( currentNumberSlide += n);
   }
 
 // to close lightbox - slider
@@ -402,13 +354,13 @@ function closeLightbox(){
   lightboxSection ? lightboxSection.removeAttribute('id') : '';
   gallery.setAttribute('class', 'gallery');
   // lightboxImg.removeAttribute('id');
-    for( elmt of galleryElmt){
+    for(let elmt of galleryElmt){
       elmt.style.display = '';
       commandSlider.style.display = 'none';
 
     }
-    for( elmt of allHeart){
-      elmt.style.display =''
+    for( let elmt of allHeart){
+      elmt.style.display = '';
     }
   }
 
@@ -427,3 +379,61 @@ document.addEventListener('keydown', (e)=>{
   }
 }
 );
+
+// to fecth to all data and fecht on Only One photographer
+function fetchOnePhotographerData(){
+  return fetch('./FishEyeData.json')
+    .then(res => res.json())
+    .then( function (datas) {
+      for(let data of datas.photographers){
+        let photographer = new Photographer(data.name, data.id, data.city, data.country, data.portrait, data.tagline, data.price, data.tags);
+        if ( Number(data.id) === Number(paramsId)){
+          let name = photographer.name;
+          firstName = name.split(' ');
+          showPhotographerHeader(photographer);
+          pricePhotograph = photographer.price;
+        }
+      }
+    })
+    .catch(error => alert ('Erreur 397 : ' + error)); // eslint-disable-line no-alert
+}
+fetchOnePhotographerData();
+
+
+
+// function to loop and extract data
+function getDatas(datas){
+  for(let data of datas.media){
+    if ( Number(data.photographerId) === Number(paramsId)){
+      // arrayLikes.push(data.likes);
+      allmedia.push(data);
+      if(data.image){
+        arrayImg.push(data.image);
+      } else {
+        arrayImg.push(data.video);
+      }
+    }
+  }
+}
+
+// to exploit data
+function setDatas(){
+  showTotalLikes();
+  let valueSelected = 'Popularité';
+  sortBy(valueSelected);
+}
+
+// to fecth one photographer specifically
+
+function fetchOnePhotographerMedia(){
+  return fetch('./FishEyeData.json')
+    .then(res => res.json())
+    .then( function (datas) {
+      getDatas(datas);
+      setDatas();
+    })
+    .catch(error => alert ('Erreur 433 : ' + error)); // eslint-disable-line no-alert
+}
+
+
+fetchOnePhotographerMedia();
