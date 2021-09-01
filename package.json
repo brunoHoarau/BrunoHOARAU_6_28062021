@@ -6,9 +6,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "sass":"sass --watch ./scss/main.scss:./style.css"
+    "sass": "sass --watch ./scss/main.scss:./style.css"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
 }
